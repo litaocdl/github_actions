@@ -1,0 +1,16 @@
+name: check-pass
+
+on:
+  pull_request:
+    types: [opened, synchronize,labeled, unlabeled]
+
+jobs:
+  checkPass:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check labels
+        uses: docker://agilepathway/pull-request-label-checker:v1.0.104
+        with:
+          one_of: pass,success
+          none_of: failed
+          repo_token: ${{secrets.TAO_PTO}}
