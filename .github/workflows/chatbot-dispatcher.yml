@@ -10,7 +10,7 @@ jobs:
       - name: dispatcher message
         uses: peter-evans/slash-command-dispatch@v2
         with:
-          token: ${{ secrets.REPO_GHA_PAT }}
+          token: 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
           issue-type: pull-request
           permission: write
           commands: test
