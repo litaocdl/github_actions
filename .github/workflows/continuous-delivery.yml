@@ -38,6 +38,8 @@ jobs:
           then
             echo "::set-output name=prNumber::${{github.event.inputs.pr_number}}"
           fi
+      - name: checkout
+        uses: actions/checkout@v2
       - name: add label
         id: label
         if: always() &&
@@ -45,4 +47,4 @@ jobs:
         uses: actions-ecosystem/action-add-labels@v1
         with:
           number: ${{ steps.checkLevel.outputs.prNumber }}
-          labels: pass
+          labels: pass,success,good
