@@ -1,0 +1,16 @@
+name: slash-command-dispatcher
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  test-dispatcher:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: dispatcher message
+        uses: peter-evans/slash-command-dispatch@v2
+        with:
+          token: ${{ secrets.REPO_GHA_PAT }}
+          issue-type: pull-request
+          permission: write
+          commands: test
