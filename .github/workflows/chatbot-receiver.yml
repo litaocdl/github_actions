@@ -21,7 +21,7 @@ jobs:
         uses: aurelien-baudet/workflow-dispatch@v2
         with:
           workflow: continuous-delivery
-          token: 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
+          token: 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
           ref: ${{ steps.chaos.outputs.ref }}
           display-workflow-run-url: true
           wait-for-completion: false
