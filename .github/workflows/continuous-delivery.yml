@@ -62,3 +62,11 @@ jobs:
               pass
               success
               good
+      - name: Run the action 
+        uses: Sibz/github-status-action@v1
+        with: 
+          authToken: ${{secrets.TAO_PTO}}
+          context: 'Test run'
+          description: 'Passed'
+          state: 'success'
+          sha: ${{github.event.pull_request.head.sha || github.sha}}
