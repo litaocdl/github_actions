@@ -25,5 +25,5 @@ jobs:
           ref: ${{ steps.chaos.outputs.ref }}
           display-workflow-run-url: true
           wait-for-completion: false
-          inputs: '{"pr_number":${{ github.event.client_payload.github.payload.issue.number }},"test":"yes"}'
+          inputs: '{"pr_number":"${{ github.event.client_payload.github.payload.issue.number }}","test":"yes"}'
       
