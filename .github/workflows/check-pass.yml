@@ -2,7 +2,7 @@ name: check-pass
 
 on:
   pull_request:
-    types: [opened, synchronize,labeled, unlabeled]
+    types: [opened, reopened, synchronize, labeled, unlabeled]
 
 jobs:
   checkPass:
@@ -14,3 +14,13 @@ jobs:
           one_of: pass,success
           none_of: failed
           repo_token: ${{secrets.TAO_PTO}}
+          
+  do-not-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check labels
+        uses: mheap/github-action-required-labels@v1
+        with:
+          mode: exactly
+          count: 0
+          labels: "do not merge"
