@@ -22,6 +22,7 @@ jobs:
         run: |
           echo ${{github.event.inputs.pr_number}}
           echo ${{github.event.inputs.test}}
+          echo ${{github.event.inputs}}
           if [[ ${{ github.event_name }} == 'pull_request' ]];
           then
             echo "::set-output name=prNumber::${{github.event.number}}"
