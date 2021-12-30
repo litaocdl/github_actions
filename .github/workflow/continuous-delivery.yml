@@ -6,31 +6,31 @@ on:
     
 jobs:
   comments-and-label:
-    name: comments
-    if: |
-      always() &&
-      (
-        github.event_name == 'pull_request' ||
-        github.event_name == 'workflow_dispatch'
-      )
-    runs-on: ubuntu-20.04
-    steps:
-      - name: check test level
-        id: checkLevel
-        if: always()
-        run: |
-          if [[ ${{ github.event_name }} == 'pull_request' ]];
-          then
-            echo "::set-output name=prNumber::${{github.event.number}}"
-          elif [[ ${{ github.event_name }} == 'workflow_dispatch' ]];
-          then
-            echo "::set-output name=prNumber::${{github.event.inputs.pr_number}}"
-          fi
-      - name: add label
-        id: label
-        if: always() &&
-             steps.checkLevel.outputs.prNumber != '' 
-        uses: actions-ecosystem/action-add-labels@v1
-        with:
-          number: ${{ steps.checkLevel.outputs.prNumber }}
-          labels: test
+  name: comments
+  if: |
+    always() &&
+    (
+      github.event_name == 'pull_request' ||
+      github.event_name == 'workflow_dispatch'
+    )
+  runs-on: ubuntu-20.04
+  steps:
+    - name: check test level
+      id: checkLevel
+      if: always()
+      run: |
+        if [[ ${{ github.event_name }} == 'pull_request' ]];
+        then
+          echo "::set-output name=prNumber::${{github.event.number}}"
+        elif [[ ${{ github.event_name }} == 'workflow_dispatch' ]];
+        then
+          echo "::set-output name=prNumber::${{github.event.inputs.pr_number}}"
+        fi
+    - name: add label
+      id: label
+      if: always() &&
+            steps.checkLevel.outputs.prNumber != '' 
+      uses: actions-ecosystem/action-add-labels@v1
+      with:
+        number: ${{ steps.checkLevel.outputs.prNumber }}
+        labels: test
