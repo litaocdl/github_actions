@@ -47,4 +47,7 @@ jobs:
         uses: actions-ecosystem/action-add-labels@v1
         with:
           number: ${{ steps.checkLevel.outputs.prNumber }}
-          labels: pass,success,good
+          labels: |
+              pass
+              success
+              good
