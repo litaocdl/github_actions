@@ -21,6 +21,7 @@ jobs:
         if: always()
         run: |
           echo ${{github.event.inputs.pr_number}}
+          echo ${{github.event.inputs.test}}
           if [[ ${{ github.event_name }} == 'pull_request' ]];
           then
             echo "::set-output name=prNumber::${{github.event.number}}"
