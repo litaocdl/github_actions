@@ -50,7 +50,6 @@ jobs:
           number: ${{ steps.checkLevel.outputs.prNumber }}
           labels: |
               pass
-              success
               good
       - name: add label
         id: label
@@ -62,7 +61,6 @@ jobs:
           number: ${{ steps.checkLevel.outputs.prNumber }}
           labels: |
               pass
-              success
               good
       - name: Run the action 
         uses: Sibz/github-status-action@v1
