@@ -15,19 +15,16 @@ jobs:
   #         none_of: failed
   #         repo_token: ${{secrets.TAO_PTO}}
 
-  do-not-merge:
+  checkPass:
     runs-on: ubuntu-latest
     steps:
-      - name: check labels
+      - name: check do not merge
         uses: mheap/github-action-required-labels@v1
         with:
           mode: exactly
           count: 0
           labels: "do not merge"
-  merge:
-    runs-on: ubuntu-latest
-    steps:
-      - name: check labels
+      - name: check merge
         uses: mheap/github-action-required-labels@v1
         with:
           mode: minimum
