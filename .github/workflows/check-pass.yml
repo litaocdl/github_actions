@@ -2,7 +2,7 @@ name: check-pass
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize, labeled, unlabeled]
+    types: [labeled, unlabeled]
 
 jobs:
   checkPass:
@@ -14,7 +14,7 @@ jobs:
           one_of: pass,success
           none_of: failed
           repo_token: ${{secrets.TAO_PTO}}
-          
+
   do-not-merge:
     runs-on: ubuntu-latest
     steps:

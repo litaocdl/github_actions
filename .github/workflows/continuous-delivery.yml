@@ -5,9 +5,9 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
-      pr_number:
-          description: pull request number referenced
-          required: false
+      # pr_number:
+      #     description: pull request number referenced
+      #     required: false
       test:
           description: just for test
           required: false
