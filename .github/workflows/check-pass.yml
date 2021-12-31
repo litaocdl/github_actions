@@ -11,7 +11,7 @@ jobs:
       - name: Check labels
         uses: docker://agilepathway/pull-request-label-checker:v1.0.104
         with:
-          one_of: pass,success
+          one_of: e2e-run
           none_of: failed
           repo_token: ${{secrets.TAO_PTO}}
 
