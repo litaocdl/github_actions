@@ -16,14 +16,24 @@ jobs:
             ref=${{ github.event.client_payload.pull_request.head.ref }}
             echo ::set-output name=ref::$ref
           fi
+      # - name: Invoke workflow-dispatch
+      #   id: trigger-workflow
+      #   uses: aurelien-baudet/workflow-dispatch@v2
+      #   with:
+      #     workflow: continuous-delivery
+      #     token: ${{secrets.TAO_PTO}}
+      #     ref: ${{ steps.chaos.outputs.ref }}
+      #     display-workflow-run-url: true
+      #     wait-for-completion: false
+      #     inputs: '{"pr_number":"${{ github.event.client_payload.github.payload.issue.number }}","test":"yes"}'
       - name: Invoke workflow-dispatch
         id: trigger-workflow
-        uses: aurelien-baudet/workflow-dispatch@v2
+        uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: continuous-delivery
           token: ${{secrets.TAO_PTO}}
           ref: ${{ steps.chaos.outputs.ref }}
           display-workflow-run-url: true
           wait-for-completion: false
-          inputs: '{"pr_number":"${{ github.event.client_payload.github.payload.issue.number }}","test":"yes"}'
+          inputs: '{"pr_number":"${{ github.event.client_payload.github.payload.issue.number }}","test2":"yes"}'
       
