@@ -4,6 +4,14 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      pr_number:
+          description: pull request number referenced
+          required: false
+      test:
+          description: just for test
+          required: false
+
     
 jobs:
   comments-and-label:
@@ -22,6 +30,8 @@ jobs:
         run: |
           echo ${{github.event.inputs.pr_number}}
           echo ${{github.event.inputs.test}}
+          echo ${{github.event.inputs}}
+          echo "::set-output name=labelsToPR::e2e-run"
           if [[ ${{ github.event_name }} == 'pull_request' ]];
           then
             echo "::set-output name=prNumber::${{github.event.number}}"
@@ -29,11 +39,31 @@ jobs:
           then
             echo "::set-output name=prNumber::${{github.event.inputs.pr_number}}"
           fi
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: unlabel
+        id: unlabel
+        if: always() &&
+              steps.checkLevel.outputs.prNumber != '' 
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{secrets.TAO_PTO}}
+          number: ${{ steps.checkLevel.outputs.prNumber }}
+          labels: ${{ steps.checkLevel.outputs.labelsToPR}}
       - name: add label
         id: label
         if: always() &&
               steps.checkLevel.outputs.prNumber != '' 
         uses: actions-ecosystem/action-add-labels@v1
         with:
+          github_token: ${{secrets.TAO_PTO}}
           number: ${{ steps.checkLevel.outputs.prNumber }}
-          labels: test
+          labels: ${{ steps.checkLevel.outputs.labelsToPR}}
+      # - name: Run the action 
+      #   uses: Sibz/github-status-action@v1
+      #   with: 
+      #     authToken: ${{secrets.TAO_PTO}}
+      #     context: 'Test run'
+      #     description: 'Passed'
+      #     state: 'success'
+      #     sha: ${{github.event.pull_request.head.sha || github.sha}}
