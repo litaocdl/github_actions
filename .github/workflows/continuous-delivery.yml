@@ -46,6 +46,7 @@ jobs:
               steps.checkLevel.outputs.prNumber != '' 
         uses: actions-ecosystem/action-remove-labels@v1
         with:
+          github_token: ${{secrets.TAO_PTO}}
           number: ${{ steps.checkLevel.outputs.prNumber }}
           labels: |
               pass
@@ -57,6 +58,7 @@ jobs:
               steps.checkLevel.outputs.prNumber != '' 
         uses: actions-ecosystem/action-add-labels@v1
         with:
+          github_token: ${{secrets.TAO_PTO}}
           number: ${{ steps.checkLevel.outputs.prNumber }}
           labels: |
               pass
