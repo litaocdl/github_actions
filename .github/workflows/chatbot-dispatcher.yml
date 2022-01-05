@@ -14,6 +14,7 @@ jobs:
           issue-type: pull-request
           permission: write
           commands: test
-          static-args:
+          static-args: 
             level=1,
-            prod=2
+            prod='local,aks',
+            pr_number=1cfde2
