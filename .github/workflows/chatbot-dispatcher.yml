@@ -15,5 +15,5 @@ jobs:
           permission: write
           commands: test
           static-args:
-            level=1
-            prod
+            level=1,
+            prod=2
