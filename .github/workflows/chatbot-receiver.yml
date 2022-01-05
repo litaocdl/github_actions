@@ -33,7 +33,7 @@ jobs:
           ref: ${{ steps.chaos.outputs.ref }}
           display-workflow-run-url: true
           wait-for-completion: false
-          inputs: '{"pr_number":"${{ github.event.client_payload.github.payload.issue.number }}","prod":"yes","level":"1"}'
+          inputs: '{"pr_number":"${{ github.event.client_payload.slash_command.args.named.pr_number }}","prod":"${{github.event.client_payload.slash_command.args.named.prod}}","level":"${{github.event.client_payload.slash_command.args.named.level}}"}'
       # - name: Invoke workflow-dispatch
       #   id: trigger-workflow
       #   uses: benc-uk/workflow-dispatch@v1
