@@ -15,6 +15,5 @@ jobs:
           permission: write
           commands: test
           static-args: |
-            level=1,
-            prod=local,aks,
+            level=1
             pr_number=1cfde2
