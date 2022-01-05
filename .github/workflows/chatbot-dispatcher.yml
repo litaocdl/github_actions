@@ -16,3 +16,4 @@ jobs:
           commands: test
           static-args:
             level=1
+            prod
