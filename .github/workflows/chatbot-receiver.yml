@@ -8,6 +8,14 @@ jobs:
   test-receiver:
     runs-on: ubuntu-20.04
     steps:
+      - name: display command params
+        run: |
+          echo "${{ github.event.client_payload.slash_command }}"
+          echo "${{ github.event.client_payload.slash_command.args.all }}"
+          echo "${{ github.event.client_payload.slash_command.args.unnamed.all }}"
+          echo "${{ github.event.client_payload.slash_command.args.named.level }}"
+          echo "${{ github.event.client_payload.slash_command.args.named.prod }}"
+          echo "${{ github.event.client_payload.slash_command.args.named.pr_number }}"
       - name: get branch name
         id: chaos
         run: |
