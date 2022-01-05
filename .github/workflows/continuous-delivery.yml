@@ -8,7 +8,10 @@ on:
       pr_number:
           description: pull request number referenced
           required: false
-      test:
+      prod:
+          description: just for test
+          required: false
+      level:
           description: just for test
           required: false
 
