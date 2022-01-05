@@ -12,7 +12,7 @@ on:
           description: just for test
           required: false
       level:
-          description: just for test1
+          description: just for test2
           required: false
 
     
