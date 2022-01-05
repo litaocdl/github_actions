@@ -16,5 +16,5 @@ jobs:
           commands: test
           static-args: |
             level=1,
-            prod="local,aks",
+            prod=local,aks,
             pr_number=1cfde2
