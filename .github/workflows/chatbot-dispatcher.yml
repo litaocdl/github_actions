@@ -14,3 +14,5 @@ jobs:
           issue-type: pull-request
           permission: write
           commands: test
+          static-args:
+            level=1
