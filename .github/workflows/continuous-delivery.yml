@@ -27,13 +27,15 @@ jobs:
       )
     runs-on: ubuntu-20.04
     steps:
+      - name: display
+        run: | 
+           echo "pr_number: ${{github.event.inputs.pr_number}}"
+           echo "prod: ${{github.event.inputs.prod}}"
+           echo "level:  ${{github.event.inputs.level}}" 
       - name: check test level
         id: checkLevel
         if: always()
         run: |
-          echo ${{github.event.inputs.pr_number}}
-          echo ${{github.event.inputs.test}}
-          echo ${{github.event.inputs}}
           echo "::set-output name=labelsToPR::e2e-run"
           if [[ ${{ github.event_name }} == 'pull_request' ]];
           then
