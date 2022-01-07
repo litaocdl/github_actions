@@ -26,10 +26,10 @@ jobs:
 
   auto-label:
     if: | 
-      ${{ github.event.issue.pull_request }} &&
+      github.event.issue.pull_request &&
       ( 
-        ${{ startsWith(github.event.comment.body, '/ok-to-merge') }} ||
-        ${{ startsWith(github.event.comment.body, '/try') }}
+        startsWith(github.event.comment.body, '/ok-to-merge') ||
+        startsWith(github.event.comment.body, '/try')
       )
     runs-on: ubuntu-20.04
     steps:
