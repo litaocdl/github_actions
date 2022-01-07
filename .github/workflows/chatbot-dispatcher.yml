@@ -32,7 +32,9 @@ jobs:
           echo ${{ join(github.event.issue.labels.*.name,',') }}
       - name: autoLabel
         uses: actions-ecosystem/action-add-labels@v1.1.0
-        if: ${{ startsWith(github.event.comment.body, '/ok-to-merge') }}
+        if: |
+            ${{ !contains(github.event.issue.labels.*.name,'ok-to-merge') }} && 
+            ${{ startsWith(github.event.comment.body, '/ok-to-merge') }}
         with:
           github_token: ${{ secrets.TAO_PTO }}
           labels: ok-to-merge 
