@@ -5,6 +5,12 @@ on:
 
 jobs:
   test-dispatcher:
+    if: | 
+      ${{ github.event.issue.pull_request }} &&
+      ( 
+        ${{ startsWith(github.event.comment.body, '/ok-to-merge') }} ||
+        ${{ startsWith(github.event.comment.body, '/test') }}
+      )
     runs-on: ubuntu-20.04
     steps:
       - name: dispatcher message
@@ -19,7 +25,12 @@ jobs:
             pr_number=1cfde2
 
   auto-label:
-    if: ${{ github.event.issue.pull_request }}
+    if: | 
+      ${{ github.event.issue.pull_request }} &&
+      ( 
+        ${{ startsWith(github.event.comment.body, '/ok-to-merge') }} ||
+        ${{ startsWith(github.event.comment.body, '/try') }}
+      )
     runs-on: ubuntu-20.04
     steps:
       - name: echo
