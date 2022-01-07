@@ -17,3 +17,13 @@ jobs:
           static-args: |
             level=1
             pr_number=1cfde2
+
+  auto-label:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: autoLabel
+        uses: actions-ecosystem/action-add-labels@v1.1.0
+        if: ${{ startsWith(github.event.comment.body, '/ok-to-merge') }}
+        with:
+          github_token: ${{ secrets.TAO_PTO }}
+          labels: ok-to-merge 
