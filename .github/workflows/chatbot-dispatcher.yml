@@ -26,7 +26,7 @@ jobs:
           echo ${{ github.event.comment.body }}
           echo ${{ github.event.issue.pull_request }}
           echo ${{ github.event.issue.pull_request.labels }}
-          echo ${{ github.event.issue.pull_request.labels.*.name }}
+          echo ${{ github.event.issue.pull_request.labels.*.name[*] }}
       - name: autoLabel
         uses: actions-ecosystem/action-add-labels@v1.1.0
         if: ${{ startsWith(github.event.comment.body, '/ok-to-merge') }}
