@@ -36,6 +36,8 @@ jobs:
       - name: echo
         run: | 
           echo ${{ github.event.comment.body }}
+          echo  ${{ startsWith(github.event.comment.body, '/ok-to-merge') }}
+          echo ${{ startsWith(github.event.comment.body, '/try') }}
           echo ${{ github.event.issue.pull_request }}
           echo ${{ github.event.issue.pull_request.labels }}
           echo ${{ contains(github.event.issue.pull_request.labels.*.name,'ok-to-merge') }}
