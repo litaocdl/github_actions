@@ -46,15 +46,15 @@ jobs:
           fi
       - name: checkout
         uses: actions/checkout@v2
-      - name: unlabel
-        id: unlabel
-        if: always() &&
-              steps.checkLevel.outputs.prNumber != '' 
-        uses: actions-ecosystem/action-remove-labels@v1
-        with:
-          github_token: ${{secrets.TAO_PTO}}
-          number: ${{ steps.checkLevel.outputs.prNumber }}
-          labels: ${{ steps.checkLevel.outputs.labelsToPR}}
+      # - name: unlabel
+      #   id: unlabel
+      #   if: always() &&
+      #         steps.checkLevel.outputs.prNumber != '' 
+      #   uses: actions-ecosystem/action-remove-labels@v1
+      #   with:
+      #     github_token: ${{secrets.TAO_PTO}}
+      #     number: ${{ steps.checkLevel.outputs.prNumber }}
+      #     labels: ${{ steps.checkLevel.outputs.labelsToPR}}
       - name: add label
         id: label
         if: always() &&
