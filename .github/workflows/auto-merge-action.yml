@@ -13,12 +13,17 @@ jobs:
         id: find-pull-request
         with:
           branch: 'auto-merge-action'
+      - name: echo
+        run: |
+          run "${{ steps.find-pull-request.outputs.number }}" 
       - name: Approve pr
+        if: ${{ steps.find-pull-request.outputs.number }} != ""
         uses: hmarr/auto-approve-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: ${{ steps.find-pull-request.outputs.number }}
       - name: AutoMerge action
+        if: ${{ steps.find-pull-request.outputs.number }} != ""
         uses: "pascalgn/automerge-action@v0.14.3"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -26,3 +31,4 @@ jobs:
           MERGE_DELETE_BRANCH: true
           MERGE_METHOD: squash
           MERGE_LABELS: automerge-action
+          UPDATE_METHOD: rebase
