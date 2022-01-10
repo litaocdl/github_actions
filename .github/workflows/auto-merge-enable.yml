@@ -13,6 +13,9 @@ jobs:
         id: find-pull-request
         with:
           branch: 'auto-merge-enable'
+      - name: run
+        run: | 
+           echo "pr number ${{ steps.find-pull-request.outputs.number }}"
       - name: Approve pr
         uses: hmarr/auto-approve-action@v2
         with:
