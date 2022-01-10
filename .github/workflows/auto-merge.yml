@@ -1,6 +1,7 @@
 name: auto-merge
 on:
   pull_request:
+  push:
 
 
 jobs:
@@ -30,3 +31,4 @@ jobs:
           PULL_REQUEST: ${{ steps.find-pull-request.outputs.number }}
           MERGE_DELETE_BRANCH: true
           MERGE_METHOD: squash
+          MERGE_LABELS: automerge
