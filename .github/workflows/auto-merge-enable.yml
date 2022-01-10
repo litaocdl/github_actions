@@ -12,7 +12,7 @@ jobs:
         uses: juliangruber/find-pull-request-action@v1
         id: find-pull-request
         with:
-          branch: 'auto-merge-update'
+          branch: 'auto-merge-enable'
       - name: Approve pr
         uses: hmarr/auto-approve-action@v2
         with:
