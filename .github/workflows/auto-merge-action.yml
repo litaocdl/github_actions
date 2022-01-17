@@ -15,7 +15,7 @@ jobs:
           branch: 'auto-merge-action'
       - name: echo
         run: |
-          run "${{ steps.find-pull-request.outputs.number }}" 
+          echo "${{ steps.find-pull-request.outputs.number }}" 
       - name: Approve pr
         if: ${{ steps.find-pull-request.outputs.number }} != ""
         uses: hmarr/auto-approve-action@v2
