@@ -32,6 +32,5 @@ jobs:
           MERGE_METHOD: "squash"
           MERGE_LABELS: "automerge"
           MERGE_REMOVE_LABELS: "automerge"
-          UPDATE_METHOD: "rebase"
           MERGE_RETRIES: "6"
           MERGE_RETRIES_SLEEP: "60002"
