@@ -1,7 +1,7 @@
 name: auto-merge-action
 on:
   pull_request:
-  push:
+    types: [labeled, unlabeled, assigned, unassigned, opened, synchronize]
 
 
 jobs:
@@ -33,4 +33,4 @@ jobs:
           MERGE_LABELS: "automerge"
           MERGE_REMOVE_LABELS: "automerge"
           MERGE_RETRIES: "6"
-          MERGE_RETRIES_SLEEP: "60001"
+          MERGE_RETRIES_SLEEP: "60002"
