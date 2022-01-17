@@ -3,6 +3,7 @@ name: check-pass
 on:
   pull_request:
     types: [labeled, unlabeled]
+  push:
 
 jobs:
   checkPass:
