@@ -28,7 +28,10 @@ jobs:
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           PULL_REQUEST: ${{ steps.find-pull-request.outputs.number }}
-          MERGE_DELETE_BRANCH: true
-          MERGE_METHOD: squash
-          MERGE_LABELS: automerge-action
-          UPDATE_METHOD: rebase
+          MERGE_DELETE_BRANCH: "true"
+          MERGE_METHOD: "squash"
+          MERGE_LABELS: "automerge"
+          MERGE_REMOVE_LABELS: "automerge"
+          UPDATE_METHOD: "rebase"
+          MERGE_RETRIES: "6"
+          MERGE_RETRIES_SLEEP: "60000"
