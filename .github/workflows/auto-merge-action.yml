@@ -1,7 +1,7 @@
 name: auto-merge-action
 on:
   pull_request:
-  push:
+    types: [labeled, unlabeled, assigned, unassigned, opened, synchronize]
 
 
 jobs:
