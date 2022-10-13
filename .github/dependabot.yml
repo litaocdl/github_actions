@@ -5,6 +5,6 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "github-actions"
-    directory: "/root/.github/workflows/"
+    directory: "/root/.github/workflows/test.yml"
     schedule:
       interval: "daily"
