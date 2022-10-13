@@ -24,7 +24,7 @@ jobs:
           pull-request-number: ${{ steps.find-pull-request.outputs.number }}
       - name: AutoMerge action
         if: ${{ steps.find-pull-request.outputs.number }} != ""
-        uses: "pascalgn/automerge-action@v0.14.3"
+        uses: "pascalgn/automerge-action@v0.15.3"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           PULL_REQUEST: ${{ steps.find-pull-request.outputs.number }}
