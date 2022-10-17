@@ -59,7 +59,7 @@ jobs:
         id: label
         if: always() &&
               steps.checkLevel.outputs.prNumber != '' 
-        uses: actions-ecosystem/action-add-labels@v1
+        uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
           github_token: ${{secrets.TAO_PTO}}
           number: ${{ steps.checkLevel.outputs.prNumber }}
