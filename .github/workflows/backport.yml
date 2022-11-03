@@ -1,0 +1,19 @@
+name: backport
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  enable-am:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: find pr
+        uses: juliangruber/find-pull-request-action@v1
+        id: find-pull-request
+        with:
+          branch: 'main'
+      - name: echo
+        run: |
+          echo "${{ steps.find-pull-request.outputs.number }}" 
+          echo "${{ steps.find-pull-request.outputs.base-sha }}" 
+  
