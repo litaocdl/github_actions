@@ -4,33 +4,31 @@ on:
   #   types: [closed]
   pull_request:
     types: [closed]
+    branches: [main]
 
 jobs:
-  if_merged:
+  back-porting:
+    name: backport the commit to release branches
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        release-branch: 
+          - "release-1.16"
+          - "release-1.17"
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: find pr
-        uses: juliangruber/find-pull-request-action@v1
-        id: find-pull-request
-        with:
-          state: closed
-          base: 'main'
-      - name: echo
-        run: |
-          echo "${{ steps.find-pull-request.outputs.number }}" 
-          echo "${{ steps.find-pull-request.outputs.base-sha }}" 
-      - name: Cherry pick into release-v2.0
+      -
+        name: Checkout code
+        uses: actions/checkout@v3
+      - 
+        name: Cherry pick into ${{ matrix.release-branch }}
         uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
         with:
-          branch: release-1.15
+          branch: ${{ matrix.release-branch }}
           labels: |
             backports 
           reviewers: |
             aReviewerUser
+
 
   
