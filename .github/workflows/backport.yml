@@ -1,7 +1,7 @@
 name: backport
 on:
-  pull_request_target:
-    types: [closed]
+  # pull_request_target:
+  #   types: [closed]
   pull_request:
     types: [closed]
 
@@ -28,7 +28,6 @@ jobs:
         uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
         with:
           branch: release-1.15
-            cherry-pick
           reviewers: |
             aReviewerUser
       # - name: Create Pull Request
