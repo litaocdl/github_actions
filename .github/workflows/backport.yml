@@ -1,12 +1,19 @@
 name: backport
 on:
+  pull_request_target:
+    types: [closed]
   pull_request:
     types: [closed]
 
 jobs:
-  enable-am:
+  if_merged:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: find pr
         uses: juliangruber/find-pull-request-action@v1
         id: find-pull-request
@@ -17,4 +24,25 @@ jobs:
         run: |
           echo "${{ steps.find-pull-request.outputs.number }}" 
           echo "${{ steps.find-pull-request.outputs.base-sha }}" 
+      - name: Cherry pick into release-v2.0
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
+        with:
+          branch: release-v2.0
+          labels: |
+            cherry-pick
+          reviewers: |
+            aReviewerUser
+      # - name: Create Pull Request
+      #   uses: peter-evans/create-pull-request@v3.10.1
+      #   if: success()
+      #   with:
+      #     token: ${{ secrets.REPO_GHA_PAT }}
+      #     commit-message: "chore(deps): new message"
+      #     branch: "cherry-pick-branch"
+      #     labels: cherry-pick
+      #     delete-branch: true
+      #     title: "cherry pick pull request"
+      #     body: |
+      #       Update the edb-postgres-distributed-operator-dbaas manifest to use version ${{ env.LATEST_RELEASE_VERSION }}.
+      #       The go module version is ${{ env.UPDATED_GO_MOD_VERSION }}.
   
