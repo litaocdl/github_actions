@@ -13,23 +13,28 @@ jobs:
     name: backport to release branches
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'backport-requested')
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        release-branch: 
-          - "release-1.16"
-          - "release-1.17"
+    # strategy:
+    #   matrix:
+    #     release-branch: 
+    #       - "release-1.16"
+    #       - "release-1.17"
     steps:
       -
         name: Checkout code
         uses: actions/checkout@v3
       - 
         name: Cherry pick into ${{ matrix.release-branch }}
-        if: contains(github.event.pull_request.labels.*.name, ${{ matrix.release-branch }})
+        # if: contains(github.event.pull_request.labels.*.name, ${{ matrix.release-branch }})
         uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
         with:
-          branch: ${{ matrix.release-branch }}
+          branch: release-1.16
+          labels: |
+            backport
+      - name: Cherry pick into ${{ matrix.release-branch }}
+        # if: contains(github.event.pull_request.labels.*.name, ${{ matrix.release-branch }})
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
+        with:
+          branch: release-1.17
           labels: |
             backport
 
-
-  
