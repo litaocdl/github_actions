@@ -3,13 +3,15 @@ on:
   # pull_request_target:
   #   types: [closed]
   pull_request:
-    types: [closed]
-    branches: [main]
+    types: 
+      - closed
+    branches: 
+       - main
 
 jobs:
   back-porting:
-    name: backport the commit to release branches
-    if: github.event.pull_request.merged == true
+    name: backport to release branches
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'backport-requested')
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -22,13 +24,12 @@ jobs:
         uses: actions/checkout@v3
       - 
         name: Cherry pick into ${{ matrix.release-branch }}
+        if: contains(github.event.pull_request.labels.*.name, ${{ matrix.release-branch }})
         uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
         with:
           branch: ${{ matrix.release-branch }}
           labels: |
-            backports 
-          reviewers: |
-            aReviewerUser
+            backport
 
 
   
