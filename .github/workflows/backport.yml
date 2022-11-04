@@ -28,19 +28,9 @@ jobs:
         uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
         with:
           branch: release-1.15
+          labels: |
+            backports 
           reviewers: |
             aReviewerUser
-      # - name: Create Pull Request
-      #   uses: peter-evans/create-pull-request@v3.10.1
-      #   if: success()
-      #   with:
-      #     token: ${{ secrets.REPO_GHA_PAT }}
-      #     commit-message: "chore(deps): new message"
-      #     branch: "cherry-pick-branch"
-      #     labels: cherry-pick
-      #     delete-branch: true
-      #     title: "cherry pick pull request"
-      #     body: |
-      #       Update the edb-postgres-distributed-operator-dbaas manifest to use version ${{ env.LATEST_RELEASE_VERSION }}.
-      #       The go module version is ${{ env.UPDATED_GO_MOD_VERSION }}.
+
   
