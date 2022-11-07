@@ -45,6 +45,7 @@ jobs:
         name: cherry pick
         if: success() && ${{ env.LABEL }} == ${{ matrix.branch }}
         env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.findPr.outputs.pr }}
         run: |
            commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
