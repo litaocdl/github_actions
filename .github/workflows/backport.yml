@@ -45,8 +45,8 @@ jobs:
         env: 
           PR: ${{ steps.findPr.outputs.pr }}
         run: |
-           echo "cherry-pick ${PR} to branch ${{ matrix.branch }}"
            commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
+            echo "cherry-pick pull request ${PR}, commit ${commit} to branch ${{ matrix.branch }}"
            if [[ "$commit" != "" ]]; then
               git checkout -b cherry-pick-${{ matrix.branch }}-${PR}
               git cherry-pick $commit
