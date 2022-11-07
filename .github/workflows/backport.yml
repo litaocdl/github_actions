@@ -27,12 +27,13 @@ jobs:
         name: Check preconditions
         id: get_pr_number_and_labels
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_GHA_PAT }}
+          GITHUB_TOKEN: ${{ secrets.TAO_PTO }}
         run: |
           echo ${{ matrix.branch }}
+          merged_pr_number=$(gh pr list ) 
           pr_number=$(gh pr view --json number -q .number 2>/dev/null || : )
           echo "PR_NUMBER=${pr_number}" >> $GITHUB_ENV
-          label=$(gh pr view --json labels -q ".mergeCommit.oid" 2>/dev/null || : | grep ${{ matrix.branch }})
+          label=$(gh pr view --json labels -q ".labels.[].name" 2>/dev/null || : | grep ${{ matrix.branch }})
           echo "LABEL=${label}" >> $GITHUB_ENV
 
 
