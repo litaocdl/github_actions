@@ -41,9 +41,12 @@ jobs:
           label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :) 
           echo "LABEL=${label}" >> $GITHUB_ENV
           echo "label find out is ${{ env.LABEL }} ${label}"
+          echo "PR=${{steps.findPr.outputs.pr}}" >> $GITHUB_ENV
       - 
         name: cherry pick
-        if: success() && ${{ env.LABEL != matrix.branch }} 
+        if: | 
+           env.LABEL != '' && 
+           env.LABEL != matrix.branch 
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.findPr.outputs.pr }}
@@ -53,6 +56,7 @@ jobs:
            commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
             echo "cherry-pick pull request ${PR}, commit ${commit} to branch ${{ matrix.branch }}"
            if [[ "$commit" != "" ]]; then
+              echo "COMMIT=${commit}" >> $GITHUB_ENV
               git fetch origin ${{ matrix.branch }}
               git checkout -b cherry-pick-${{ matrix.branch }}-${PR}-${commit} origin/${{ matrix.branch }}
               git cherry-pick $commit
@@ -60,13 +64,14 @@ jobs:
       - 
         name: create pull request
         uses: gr2m/create-or-update-pull-request-action@v1
-        if: success()
+        if: | 
+            success() && 
+            env.COMMIT != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR: ${{ steps.findPr.outputs.pr }}
         with:
           title: "backport pr ${PR} to branch ${{ matrix.branch }}"
-          branch: cherry-pick-${{ matrix.branch }}-${PR}-${commit}
+          branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}-${{ env.COMMIT }}
 
            
 
