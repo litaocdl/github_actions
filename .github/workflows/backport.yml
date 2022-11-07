@@ -62,7 +62,7 @@ jobs:
               git fetch origin ${{ matrix.branch }}
               git checkout -b cherry-pick-${{ matrix.branch }}-${PR}-${commit} origin/${{ matrix.branch }}
               git cherry-pick $commit
-              git push origin cherry-pick-${{ matrix.branch }}-${PR}-${commit}:cherry-pick-${{ matrix.branch }}-${PR}-${commit}
+              # git push origin cherry-pick-${{ matrix.branch }}-${PR}-${commit}:cherry-pick-${{ matrix.branch }}-${PR}-${commit}
            fi
       - 
         name: Create Pull Request
