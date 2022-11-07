@@ -53,8 +53,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.findPr.outputs.pr }}
         run: |
-           git config --global user.email "cnpgbot@github.com"
-           git config --global user.name "cnpg bot"
+           git config --global user.email "tao.li@enterprisedb.com"
+           git config --global user.name "Tao"
            commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
             echo "cherry-pick pull request ${PR}, commit ${commit} to branch ${{ matrix.branch }}"
            if [[ "$commit" != "" ]]; then
