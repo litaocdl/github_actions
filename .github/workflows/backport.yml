@@ -24,17 +24,24 @@ jobs:
         name: Checkout code
         uses: actions/checkout@v3
       - 
+        id: findPr
+        uses: jwalton/gh-find-current-pr@v
+        with: closed
+      - 
+        run: the pull request is ${PR}
+        if: success() && steps.findPr.outputs.number
+        env:
+          PR: ${{ steps.findPr.outputs.pr }}
+      - 
         name: Check preconditions
         id: get_pr_number_and_labels
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo ${{ matrix.branch }}
-          pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          echo "PR_NUMBER=${pr_number}" >> $GITHUB_ENV
-          label=$(gh pr view --json labels -q ".labels.[].name" 2>/dev/null || : | grep ${{ matrix.branch }})
+          echo ${{ env.PR }}
+          label=$(gh pr view ${{ env.PR }} --json labels -q ".labels.[].name" 2>/dev/null || : | grep ${{ matrix.branch }})
           echo "LABEL=${label}" >> $GITHUB_ENV
-          echo ${{ env.PR_NUMBER}}
           echo ${{ env.LABEL}}
 
 
