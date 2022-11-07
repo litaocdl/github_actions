@@ -53,7 +53,8 @@ jobs:
            commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
             echo "cherry-pick pull request ${PR}, commit ${commit} to branch ${{ matrix.branch }}"
            if [[ "$commit" != "" ]]; then
-              git checkout -b cherry-pick-${{ matrix.branch }}-${PR}-${commit}
+              git fetch origin ${{ matrix.branch }}
+              git checkout -b cherry-pick-${{ matrix.branch }}-${PR}-${commit} origin/${{ matrix.branch }}
               git cherry-pick $commit
               git push 
            fi
