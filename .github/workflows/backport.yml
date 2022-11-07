@@ -1,91 +1,26 @@
-name: backport
+name: Backport
 on:
-  # pull_request_target:
-  #   types: [closed]
-  pull_request:
-    types: 
+  pull_request_target:
+    types:
       - closed
-    branches: 
-       - main
+      - labeled
 
 jobs:
-  back-porting:
-    name: backport to release branches
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'backport-requested')
-    runs-on: ubuntu-20.04    
-    strategy:
-      fail-fast: false
-      matrix:
-        branch: 
-          -  release-1.16
-          -  release-1.17
+  backport:
+    name: Backport
+    runs-on: ubuntu-latest
+    # Only react to merged PRs for security reasons.
+    # See https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request_target.
+    if: >
+      github.event.pull_request.merged
+      && (
+        github.event.action == 'closed'
+        || (
+          github.event.action == 'labeled'
+          && contains(github.event.label.name, 'backport')
+        )
+      )
     steps:
-      -
-        name: Checkout code
-        uses: actions/checkout@v3
-        # with:
-        #   fetch-depth: 0
-        #   persist-credentials: false
-      - 
-        id: findPr
-        uses: jwalton/gh-find-current-pr@v1.3.2
-        with: 
-          state: closed
-      - 
-        name: Check labels
-        if: success() && steps.findPr.outputs.number
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR: ${{ steps.findPr.outputs.pr }}
-        run: |
-          echo "pull request to backport is ${PR}"
-          label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :) 
-          echo "LABEL=${label}" >> $GITHUB_ENV
-          echo "label find out is ${{ env.LABEL }}"
-          echo "label find out is ${label}"
-          echo "PR=${{steps.findPr.outputs.pr}}" >> $GITHUB_ENV
-      - 
-        name: cherry pick
-        if: | 
-           env.LABEL != '' && 
-           env.LABEL == matrix.branch 
-        env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR: ${{ steps.findPr.outputs.pr }}
-        run: |
-           git config --global user.email "tao.li@enterprisedb.com"
-           git config --global user.name "litaocdl"
-           commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
-            echo "cherry-pick pull request ${PR}, commit ${commit} to branch ${{ matrix.branch }}"
-           if [[ "$commit" != "" ]]; then
-              echo "COMMIT=${commit}" >> $GITHUB_ENV
-              git fetch origin ${{ matrix.branch }}
-              git checkout -b cherry-pick-${{ matrix.branch }}-${PR}-${commit} 
-              git reset --hard origin/${{ matrix.branch }}
-              git cherry-pick $commit
-              # git push origin cherry-pick-${{ matrix.branch }}-${PR}-${commit}:cherry-pick-${{ matrix.branch }}-${PR}-${commit}
-           fi
-      - 
-        name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
-        if: | 
-            success() && 
-            env.COMMIT != ''
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: tibdex/backport@v2
         with:
-          title: "backport pr ${PR} to branch ${{ matrix.branch }}"
-          branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}-${{ env.COMMIT }}
-          delete-branch: true
-          base: ${{ matrix.branch }}
-        # name: create pull request
-        # uses: gr2m/create-or-update-pull-request-action@v1
-        # if: | 
-        #     success() && 
-        #     env.COMMIT != ''
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # with:
-        #   title: "backport pr ${PR} to branch ${{ matrix.branch }}"
-        #   branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}-${{ env.COMMIT }}
-
+          github_token: ${{ secrets.GITHUB_TOKEN }}
