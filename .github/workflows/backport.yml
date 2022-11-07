@@ -59,7 +59,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          title: "backport pr ${{ env.PR} } to branch ${{ matrix.branch }}"
+          title: "backport pr ${{ env.PR }} to branch ${{ matrix.branch }}"
           branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}
 
            
