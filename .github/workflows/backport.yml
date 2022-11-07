@@ -40,13 +40,14 @@ jobs:
           echo "pull request to backport is ${PR}"
           label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :) 
           echo "LABEL=${label}" >> $GITHUB_ENV
-          echo "label find out is ${{ env.LABEL }} ${label}"
+          echo "label find out is ${{ env.LABEL }}"
+          echo "label find out is ${label}"
           echo "PR=${{steps.findPr.outputs.pr}}" >> $GITHUB_ENV
       - 
         name: cherry pick
         if: | 
            env.LABEL != '' && 
-           env.LABEL != matrix.branch 
+           env.LABEL == matrix.branch 
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.findPr.outputs.pr }}
