@@ -43,7 +43,7 @@ jobs:
           echo "label find out is ${{ env.LABEL }} ${label}"
       - 
         name: cherry pick
-        if: success() && ${{ env.LABEL }} == ${{ matrix.branch }}
+        if: success() && ${{ env.LABEL != matrix.branch }} 
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.findPr.outputs.pr }}
@@ -53,7 +53,7 @@ jobs:
            commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
             echo "cherry-pick pull request ${PR}, commit ${commit} to branch ${{ matrix.branch }}"
            if [[ "$commit" != "" ]]; then
-              git checkout -b cherry-pick-${{ matrix.branch }}-${PR}
+              git checkout -b cherry-pick-${{ matrix.branch }}-${PR}-${commit}
               git cherry-pick $commit
               git push 
            fi
