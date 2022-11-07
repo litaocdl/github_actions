@@ -46,12 +46,22 @@ jobs:
         if: success() && ${{ env.LABEL }} == ${{ matrix.branch }}
         run: |
            echo "cherry-pick ${env.PR} to branch ${{ matrix.branch }}"
-           commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
+           commit=$(gh pr view ${env.PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
            if [[ "$commit" != "" ]]; then
               git checkout -b cherry-pick-${{ matrix.branch }}-${env.PR}
               git cherry-pick $commit
               git push 
            fi
+      - 
+        name: create pull request
+        uses: gr2m/create-or-update-pull-request-action@v1
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          title: "backport pr ${env.PR} to branch ${{ matrix.branch }}"
+          branch: cherry-pick-${{ matrix.branch }}-${env.PR}
+
            
 
 
