@@ -26,7 +26,8 @@ jobs:
       - 
         id: findPr
         uses: jwalton/gh-find-current-pr@v
-        with: closed
+        with: 
+          state: closed
       - 
         run: the pull request is ${PR}
         if: success() && steps.findPr.outputs.number
