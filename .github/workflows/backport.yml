@@ -41,14 +41,17 @@ jobs:
         run: |
           label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :) 
           echo "LABEL=${label}" >> $GITHUB_ENV
+          echo ${{ env.LABEL }}""
       - 
         name: cherry pick
         if: success() && ${{ env.LABEL }} == ${{ matrix.branch }}
+        env: 
+          PR: ${{ steps.findPr.outputs.pr }}
         run: |
-           echo "cherry-pick ${{ env.PR }} to branch ${{ matrix.branch }}"
-           commit=$(gh pr view ${{ env.PR }} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
+           echo "cherry-pick ${PR} to branch ${{ matrix.branch }}"
+           commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
            if [[ "$commit" != "" ]]; then
-              git checkout -b cherry-pick-${{ matrix.branch }}-${{ env.PR }}
+              git checkout -b cherry-pick-${{ matrix.branch }}-${PR}
               git cherry-pick $commit
               git push 
            fi
@@ -58,9 +61,10 @@ jobs:
         if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ steps.findPr.outputs.pr }}
         with:
-          title: "backport pr ${{ env.PR }} to branch ${{ matrix.branch }}"
-          branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}
+          title: "backport pr ${PR} to branch ${{ matrix.branch }}"
+          branch: cherry-pick-${{ matrix.branch }}-${PR}
 
            
 
