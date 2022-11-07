@@ -29,19 +29,16 @@ jobs:
         with: 
           state: closed
       - 
-        run: echo "pull request to backport is ${PR}"
-        if: success() && steps.findPr.outputs.number
-        env:
-          PR: ${{ steps.findPr.outputs.pr }}
-      - 
         name: Check labels
+        if: success() && steps.findPr.outputs.number
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.findPr.outputs.pr }}
         run: |
+          echo "pull request to backport is ${PR}"
           label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :) 
           echo "LABEL=${label}" >> $GITHUB_ENV
-          echo ${{ env.LABEL }}""
+          echo "label find out is ${{ env.LABEL }} ${label}"
       - 
         name: cherry pick
         if: success() && ${{ env.LABEL }} == ${{ matrix.branch }}
