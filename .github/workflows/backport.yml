@@ -11,22 +11,39 @@ on:
 jobs:
   back-porting:
     name: backport to release branches
-    if: github.event.pull_request.merged == true 
-    runs-on: ubuntu-20.04
-    # strategy:
-    #   matrix:
-    #     release-branch: 
-    #       - "release-1.16"
-    #       - "release-1.17"
+    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'backport-requested')
+    runs-on: ubuntu-20.04    
+    strategy:
+      fail-fast: false
+      matrix:
+        branch: 
+          -  release-1.16
+          -  release-1.17
     steps:
       -
         name: Checkout code
         uses: actions/checkout@v3
       - 
-        name: backport to release branches
-        uses: tibdex/backport@v2
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        name: Check preconditions
+        id: get_pr_number_and_labels
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_GHA_PAT }}
+        run: |
+          echo ${{ matrix.branch }}
+          pr_number=$(gh pr view --json number -q .number 2>/dev/null || : )
+          echo "PR_NUMBER=${pr_number}" >> $GITHUB_ENV
+          label=$(gh pr view --json labels -q ".mergeCommit.oid" 2>/dev/null || : | grep ${{ matrix.branch }})
+          echo "LABEL=${label}" >> $GITHUB_ENV
+
+
+
+
+
+
+
+
+
+
       # - name: Cherry pick into ${{ matrix.release-branch }}
       #   # if: contains(github.event.pull_request.labels.*.name, ${{ matrix.release-branch }})
       #   uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
