@@ -61,11 +61,12 @@ jobs:
               echo "COMMIT=${commit}" >> $GITHUB_ENV
               git fetch
               git branch
+              git version
               git checkout -B ${{ matrix.branch }} origin/${{ matrix.branch }} -t -f
               git checkout -B cherry-pick-${{ matrix.branch }}-${PR}-${commit} -f
               git cherry-pick -x --allow-empty-message --mainline 1 $commit
               git diff
-              # git push origin cherry-pick-${{ matrix.branch }}-${PR}-${commit}:cherry-pick-${{ matrix.branch }}-${PR}-${commit}
+              git push origin cherry-pick-${{ matrix.branch }}-${PR}-${commit}:cherry-pick-${{ matrix.branch }}-${PR}-${commit}
            fi
       - 
         name: Create Pull Request
