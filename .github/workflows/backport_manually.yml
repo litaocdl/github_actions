@@ -60,9 +60,10 @@ jobs:
            if [[ "$commit" != "" ]]; then
               echo "COMMIT=${commit}" >> $GITHUB_ENV
               git fetch
-              git switch -c ${{ matrix.branch }}
-              git checkout -b cherry-pick-${{ matrix.branch }}-${PR}-${commit} 
-              git cherry-pick -x --allow-empty-message $commit
+        
+              git checkout -B ${{ matrix.branch }} origin/${{ matrix.branch }} -t -f
+              git checkout -B cherry-pick-${{ matrix.branch }}-${PR}-${commit} -f
+              git cherry-pick -x --allow-empty-message --mainline 1 $commit
               # git push origin cherry-pick-${{ matrix.branch }}-${PR}-${commit}:cherry-pick-${{ matrix.branch }}-${PR}-${commit}
            fi
       - 
