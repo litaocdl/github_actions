@@ -68,18 +68,19 @@ jobs:
               git diff
               git push origin cherry-pick-${{ matrix.branch }}-${PR}-${commit}:cherry-pick-${{ matrix.branch }}-${PR}-${commit}
            fi
-      # - 
-      #   name: Create Pull Request
-      #   uses: peter-evans/create-pull-request@v4
-      #   if: | 
-      #       success() && 
-      #       env.COMMIT != ''
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     title: "backport pr ${PR} to branch ${{ matrix.branch }}"
-      #     branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}-${{ env.COMMIT }}
-      #     base: ${{ matrix.branch }}
+      - 
+        name: create pull request
+        uses: devops-infra/action-pull-request@v0.5.2
+        if: | 
+            success() && 
+            env.COMMIT != ''
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          source_branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}-${{ env.COMMIT }}
+          target_branch: ${{ matrix.branch }}
+          title: "backport pr ${PR} to branch ${{ matrix.branch }}"
+          body: "**Automated pull request**"
+          label: backport
         # name: create pull request
         # uses: gr2m/create-or-update-pull-request-action@v1
         # if: | 
