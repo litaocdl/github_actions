@@ -18,4 +18,4 @@ spec:
     resources: {}
   dnsPolicy: ClusterFirst
   restartPolicy: Always
-status: { This is a status }
+status: { This is not a status }
