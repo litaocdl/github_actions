@@ -56,13 +56,13 @@ jobs:
            git config --global user.email "tao.li@enterprisedb.com"
            git config --global user.name "litaocdl"
            commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :) 
-            echo "cherry-pick pull request ${PR}, commit ${commit} to branch ${{ matrix.branch }}"
+           echo "cherry-pick pull request ${PR}, commit ${commit} to branch ${{ matrix.branch }}"
            if [[ "$commit" != "" ]]; then
               echo "COMMIT=${commit}" >> $GITHUB_ENV
-              git fetch origin ${{ matrix.branch }}
+              git fetch
+              git switch -c ${{ matrix.branch }}
               git checkout -b cherry-pick-${{ matrix.branch }}-${PR}-${commit} 
-              git reset --hard origin/${{ matrix.branch }}
-              git cherry-pick $commit
+              git cherry-pick -x --allow-empty-message $commit
               # git push origin cherry-pick-${{ matrix.branch }}-${PR}-${commit}:cherry-pick-${{ matrix.branch }}-${PR}-${commit}
            fi
       - 
