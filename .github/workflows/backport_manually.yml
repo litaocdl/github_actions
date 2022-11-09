@@ -22,7 +22,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           number:  ${{ github.event.pull_request.number }}
-          labels: backport-requested, release-1.16, release-1.17
+          labels: | 
+            backport-requested
+            release-1.16
+            release-1.17
       -
         name: Create comment
         uses: peter-evans/create-or-update-comment@v2
