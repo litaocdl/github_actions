@@ -25,13 +25,13 @@ jobs:
           labels: "backport-requested, release-1.16, release-1.17"
       -
         name: Create comment
-          uses: peter-evans/create-or-update-comment@v2
-          with:
-            token: ${{ secrets.REPO_GHA_PAT }}
-            issue-number: ${{ github.event.pull_request.number }}
-            body: |
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          token: ${{ secrets.REPO_GHA_PAT }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
               The ticket by default backport to all release branches
-            reactions: heart
+          reactions: heart
 
   ## backport pull request in condition when pr contains 'backport-requested' label and contains target branches labels
   back-porting-pr:
