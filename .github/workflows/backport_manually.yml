@@ -22,7 +22,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           number:  ${{ github.event.pull_request.number }}
-          labels: | 
+          labels: |
             backport-requested
             release-1.16
             release-1.17
@@ -33,7 +33,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-              The ticket by default backport to all release branches
+              By default, the pull request is supposed to backport all release branches.
+              Add 'backport-requested' and all release branches label to pull request.
           reactions: heart
 
   ## backport pull request in condition when pr contains 'backport-requested' label and contains target branches labels
@@ -54,16 +55,11 @@ jobs:
         with:
           fetch-depth: 0
       -
-        id: findPr
-        uses: jwalton/gh-find-current-pr@v1.3.2
-        with:
-          state: closed
-      -
         name: Check labels
-        if: success() && steps.findPr.outputs.number
+        if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR: ${{ steps.findPr.outputs.pr }}
+          PR: ${{ github.event.pull_request.number }}
         run: |
           label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :)
           echo "LABEL=${label}" >> $GITHUB_ENV
@@ -78,18 +74,19 @@ jobs:
           echo "AUTHOR_EMAIL=${author_email}" >> $GITHUB_ENV
       -
         name: Configure git user
+        if: |
+          env.LABEL != '' &&
+          env.COMMIT != '' &&
+          env.LABEL == matrix.branch
         run: |
           git config user.email "${{ env.AUTHOR_EMAIL }}"
           git config user.name "${{ env.AUTHOR_NAME }}"
       -
         name: cherry pick
-        if: |
-          env.LABEL != '' &&
-          env.COMMIT != '' &&
-          env.LABEL == matrix.branch
+        if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR: ${{ steps.findPr.outputs.pr }}
+          PR: ${{ github.event.pull_request.number }}
         run: |
            git fetch
            git checkout -B ${{ matrix.branch }} origin/${{ matrix.branch }} -t -f
@@ -107,7 +104,6 @@ jobs:
           source_branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}-${{ env.COMMIT }}
           target_branch: ${{ matrix.branch }}
           title: "chore(backport): backport pull request ${{ env.PR }} to branch ${{ matrix.branch }}"
-          body: "This is a backport pull request, do not squash when merge it"
+          body: "This is a backport pull request, use rebase and merge to keep the original information"
           label: backport,do not squash
-
 
