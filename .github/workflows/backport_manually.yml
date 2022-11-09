@@ -1,10 +1,10 @@
 name: pull_request_backport
 on:
-  pull_request_target:
-    types:
-      - closed
-    branches:
-      - main
+  # pull_request_target:
+  #   types:
+  #     - closed
+  #   branches:
+  #     - main
   pull_request:
     types:
       - closed
@@ -49,9 +49,9 @@ jobs:
           commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :)
           echo "COMMIT=${commit}" >> $GITHUB_ENV
           echo "cherry-pick commit ${commit} to branch ${{ matrix.branch }}"
-          author_name=$(git show -s --format='%an' "${commit_sha}")
+          author_name=$(git show -s --format='%an' "${commit}")
           echo "AUTHOR_NAME=${author_name}" >> $GITHUB_ENV
-          author_email=$(git show -s --format='%ae' "${commit_sha}")
+          author_email=$(git show -s --format='%ae' "${commit}")
           echo "AUTHOR_EMAIL=${author_email}" >> $GITHUB_ENV
       -
         name: Configure git user
