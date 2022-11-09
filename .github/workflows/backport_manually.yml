@@ -20,14 +20,14 @@ jobs:
         name: label the pull request
         uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
-          github_token: ${{ secrets.REPO_GHA_PAT }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           number:  ${{ github.event.pull_request.number }}
           labels: "backport-requested, release-1.16, release-1.17"
       -
         name: Create comment
         uses: peter-evans/create-or-update-comment@v2
         with:
-          token: ${{ secrets.REPO_GHA_PAT }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
               The ticket by default backport to all release branches
