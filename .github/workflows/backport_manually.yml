@@ -5,11 +5,11 @@ on:
       - closed
     branches:
       - main
-  pull_request:
-    types:
-      - closed
-    branches:
-      - main
+#  pull_request:
+#    types:
+#      - closed
+#    branches:
+#      - main
 
 ## backport pull request in condition when pr contains 'backport-requested' label and contains target branches labels
 
@@ -49,9 +49,9 @@ jobs:
           commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :)
           echo "COMMIT=${commit}" >> $GITHUB_ENV
           echo "cherry-pick commit ${commit} to branch ${{ matrix.branch }}"
-          author_name=$(git show -s --format='%an' "${commit_sha}")
+          author_name=$(git show -s --format='%an' "${commit}")
           echo "AUTHOR_NAME=${author_name}" >> $GITHUB_ENV
-          author_email=$(git show -s --format='%ae' "${commit_sha}")
+          author_email=$(git show -s --format='%ae' "${commit}")
           echo "AUTHOR_EMAIL=${author_email}" >> $GITHUB_ENV
       -
         name: Configure git user
@@ -83,8 +83,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           source_branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}-${{ env.COMMIT }}
           target_branch: ${{ matrix.branch }}
-          title: "backport pr ${{ env.PR }} to branch ${{ matrix.branch }}"
-          body: "**Automated pull request**"
-          label: backport
-
-
+          title: "chore(backport): backport pull request ${{ env.PR }} to branch ${{ matrix.branch }}"
+          body: "This is a backport pull request, do not squash when merge it"
+          label: backport,do not squash
