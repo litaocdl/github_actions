@@ -3,13 +3,37 @@ on:
   pull_request_target:
     types:
       - closed
+      - opened
+      - reopened
     branches:
       - main
 
-
-## backport pull request in condition when pr contains 'backport-requested' label and contains target branches labels
-
 jobs:
+  # Label the source pull request with 'backport-requested' and all supported releases label, the goal is, by default
+  # we backport everything
+  label-source-pr:
+    name: label the source pr
+    if: github.event.pull_request.merged == false
+    runs-on: ubuntu-20.04
+    steps:
+      -
+        name: label the pull request
+        uses: actions-ecosystem/action-add-labels@v1.1.3
+        with:
+          github_token: ${{ secrets.REPO_GHA_PAT }}
+          number:  ${{ github.event.pull_request.number }}
+          labels: "backport-requested, release-1.16, release-1.17"
+      -
+        name: Create comment
+          uses: peter-evans/create-or-update-comment@v2
+          with:
+            token: ${{ secrets.REPO_GHA_PAT }}
+            issue-number: ${{ github.event.pull_request.number }}
+            body: |
+              The ticket by default backport to all release branches
+            reactions: heart
+
+  ## backport pull request in condition when pr contains 'backport-requested' label and contains target branches labels
   back-porting-pr:
     name: backport to release branches
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'backport-requested')
@@ -82,3 +106,5 @@ jobs:
           title: "chore(backport): backport pull request ${{ env.PR }} to branch ${{ matrix.branch }}"
           body: "This is a backport pull request, do not squash when merge it"
           label: backport,do not squash
+
+
