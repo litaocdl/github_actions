@@ -16,6 +16,9 @@ jobs:
     if: github.event.pull_request.merged == false
     runs-on: ubuntu-20.04
     steps:
+      - 
+        run: | 
+          echo "${{ github.event.pull_request }}"
       -
         name: label the pull request
         uses: actions-ecosystem/action-add-labels@v1.1.3
