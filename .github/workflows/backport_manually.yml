@@ -1,10 +1,10 @@
 name: pull_request_backport
 on:
-  pull_request_target:
-    types:
-      - closed
-    branches:
-      - main
+  # pull_request_target:
+  #   types:
+  #     - closed
+  #   branches:
+  #     - main
   pull_request:
     types:
       - closed
@@ -42,6 +42,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.findPr.outputs.pr }}
         run: |
+          git fetch
           label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :)
           echo "LABEL=${label}" >> $GITHUB_ENV
           echo "PR=${{steps.findPr.outputs.pr}}" >> $GITHUB_ENV
@@ -68,7 +69,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ steps.findPr.outputs.pr }}
         run: |
-           git fetch
            git checkout -B ${{ matrix.branch }} origin/${{ matrix.branch }} -t -f
            git checkout -B cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }} -f
            git cherry-pick -x --allow-empty-message --mainline 1 ${{ env.COMMIT }}
