@@ -96,32 +96,28 @@ jobs:
       -
         name: create pull request
         uses: devops-infra/action-pull-request@v0.5.2
-        env:
-          PR: ${{ github.event.pull_request.number }}
         if: |
           success() &&
           env.COMMIT != ''
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}
+          source_branch: cherry-pick-${{ matrix.branch }}-${{ github.event.pull_request.number }}-${{ env.COMMIT }}
           target_branch: ${{ matrix.branch }}
-          title: "chore(backport): backport pull request ${PR} to branch ${{ matrix.branch }}"
+          title: "chore(backport): backport pull request ${{ github.event.pull_request.number }} to branch ${{ matrix.branch }}"
           body: "This is a backport pull request, use rebase and merge to keep the original information"
           label: backport,do not squash
       -
         name: create ticket
         uses: dacbd/create-issue-action@v1.2.1
-        env:
-          PR: ${{ github.event.pull_request.number }}
         if: |
-          failure()
+          always()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: backport failure for pull request ${PR}
+          title: backport failure for pull request ${{ github.event.pull_request.number }}
           labels: backport
           body: |
             ### Context
-            backport pull request  ${PR} to release branch ${{ matrix.branch }}
+            backport pull request  ${{ github.event.pull_request.number }} to release branch ${{ matrix.branch }}
             is failed, action needed.
 
 
