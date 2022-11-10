@@ -33,9 +33,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-              By default, the pull request is supposed to backport to all release branches.
-              Currently only pull request merged with one single commit is supported, if `rebase and merge` is used,
-              need backport manually.
+            By default, the pull request is supposed to backport to all release branches.
+            Currently only pull request merged with one single commit is supported, if `rebase and merge` is used,
+            need backport manually.
           reactions: heart
 
   ## backport pull request in condition when pr contains 'backport-requested' label and contains target branches labels
@@ -64,7 +64,6 @@ jobs:
         run: |
           label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :)
           echo "LABEL=${label}" >> $GITHUB_ENV
-          echo "PR=${{steps.findPr.outputs.pr}}" >> $GITHUB_ENV
           echo "find label ${label} in pull request ${PR}"
           commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :)
           echo "COMMIT=${commit}" >> $GITHUB_ENV
@@ -91,18 +90,20 @@ jobs:
         run: |
            git fetch
            git checkout -B ${{ matrix.branch }} origin/${{ matrix.branch }} -t -f
-           git checkout -B cherry-pick-${{ matrix.branch }}-${PR} -f
-           git cherry-pick -x --mainline 1 ${{ env.COMMIT }}
-           git push origin cherry-pick-${{ matrix.branch }}-${PR}:cherry-pick-${{ matrix.branch }}-${PR}
+           git checkout -B cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }} -f
+           git cherry-pick -x --allow-empty-message --mainline 1 ${{ env.COMMIT }}
+           git push origin cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}:cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}
       -
         name: create pull request
         uses: devops-infra/action-pull-request@v0.5.2
+        env:
+          PR: ${{ github.event.pull_request.number }}
         if: |
           success() &&
           env.COMMIT != ''
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}
+          source_branch: cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}
           target_branch: ${{ matrix.branch }}
           title: "chore(backport): backport pull request ${{ env.PR }} to branch ${{ matrix.branch }}"
           body: "This is a backport pull request, use rebase and merge to keep the original information"
@@ -110,13 +111,19 @@ jobs:
       -
         name: create ticket
         uses: dacbd/create-issue-action@v1.2.1
+        env:
+          PR: ${{ github.event.pull_request.number }}
         if: |
           failure()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: backport failure for pull request ${{ env.PR }}
+          title: backport failure for pull request ${{ PR }}
           labels: backport
           body: |
             ### Context
-            backport pull request  ${{ env.PR }} to release branch ${{ matrix.branch }}
+            backport pull request  ${{ PR }} to release branch ${{ matrix.branch }}
             is failed, action needed.
+
+
+
+
