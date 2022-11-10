@@ -91,9 +91,9 @@ jobs:
         run: |
            git fetch
            git checkout -B ${{ matrix.branch }} origin/${{ matrix.branch }} -t -f
-           git checkout -B cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }} -f
+           git checkout -B cherry-pick-${{ matrix.branch }}-${PR} -f
            git cherry-pick -x --mainline 1 ${{ env.COMMIT }}
-           git push origin cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}:cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}
+           git push origin cherry-pick-${{ matrix.branch }}-${PR}:cherry-pick-${{ matrix.branch }}-${PR}
       -
         name: create pull request
         uses: devops-infra/action-pull-request@v0.5.2
@@ -102,7 +102,7 @@ jobs:
           env.COMMIT != ''
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          source_branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}-${{ env.COMMIT }}
+          source_branch: cherry-pick-${{ matrix.branch }}-${{ env.PR }}
           target_branch: ${{ matrix.branch }}
           title: "chore(backport): backport pull request ${{ env.PR }} to branch ${{ matrix.branch }}"
           body: "This is a backport pull request, use rebase and merge to keep the original information"
