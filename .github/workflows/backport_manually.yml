@@ -112,11 +112,9 @@ jobs:
         uses: dacbd/create-issue-action@v1.2.1
         if: |
           failure()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: [backport] backport failure for pull request ${{ env.PR }}
+          title: backport failure for pull request ${{ env.PR }}
           labels: backport
           body: |
             ### Context
