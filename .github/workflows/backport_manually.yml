@@ -92,7 +92,7 @@ jobs:
            git fetch
            git checkout -B ${{ matrix.branch }} origin/${{ matrix.branch }} -t -f
            git checkout -B cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }} -f
-           git cherry-pick -x --allow-empty-message --mainline 1 ${{ env.COMMIT }}
+           git cherry-pick -x --mainline 1 ${{ env.COMMIT }}
            git push origin cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}:cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}
       -
         name: create pull request
