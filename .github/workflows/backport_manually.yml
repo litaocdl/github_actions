@@ -105,7 +105,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           source_branch: cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}
           target_branch: ${{ matrix.branch }}
-          title: "chore(backport): backport pull request ${{ env.PR }} to branch ${{ matrix.branch }}"
+          title: "chore(backport): backport pull request ${PR} to branch ${{ matrix.branch }}"
           body: "This is a backport pull request, use rebase and merge to keep the original information"
           label: backport,do not squash
       -
@@ -117,11 +117,11 @@ jobs:
           failure()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: backport failure for pull request ${{ PR }}
+          title: backport failure for pull request ${PR}
           labels: backport
           body: |
             ### Context
-            backport pull request  ${{ PR }} to release branch ${{ matrix.branch }}
+            backport pull request  ${PR} to release branch ${{ matrix.branch }}
             is failed, action needed.
 
 
