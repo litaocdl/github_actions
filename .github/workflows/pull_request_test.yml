@@ -59,7 +59,7 @@ jobs:
           echo "head full name: ${{ github.head.repo.full_name }}"
           echo "base full name: ${{ github.base.repo.full_name }}"
           echo "github.ref: ${{  github.ref }}"
-          echo "this is in main branch"
+          echo "this is in fork branch"
           
   job2:
     name: checkout 
@@ -83,7 +83,7 @@ jobs:
           echo "head full name: ${{ github.head.repo.full_name }}"
           echo "base full name: ${{ github.base.repo.full_name }}"
           echo "github.ref: ${{  github.ref }}"
-          echo "this is in main branch"
+          echo "this is in fork branch"
           
   job3:
     name: checkout HEAD
@@ -109,4 +109,4 @@ jobs:
           echo "head full name: ${{ github.head.repo.full_name }}"
           echo "base full name: ${{ github.base.repo.full_name }}"
           echo "github.ref: ${{  github.ref }}"
-          echo "this is in main branch"
+          echo "this is in fork branch"
