@@ -12,6 +12,8 @@ jobs:
   duplicate_runs:
     runs-on: ubuntu-20.04
     name: Skip duplicate runs
+    env: 
+      RUN_FORK: ${{github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name}}
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip == 'true' }}
     steps:
@@ -19,6 +21,7 @@ jobs:
       name: skip_check
       id: skip_check
       run: |
+        echo "run fork ${RUN_FORK}"
         fork=${{github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name}}
         echo "IS_FROM_FORK=${fork}" >> $GITHUB_ENV
         if [ ${fork} == 'true' ]; then
