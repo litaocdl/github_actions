@@ -36,7 +36,7 @@ jobs:
           echo "github.ref: ${{  github.ref }}"
           echo "this is in main branch"
           
-   job2:
+  job2:
     name: checkout 
     runs-on: ubuntu-20.04
     steps:
