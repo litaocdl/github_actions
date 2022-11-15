@@ -25,15 +25,18 @@ jobs:
      -
       name: skip_check
       run: |
-        echo "IS_FROM_FORK=${{github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name}}" >> $GITHUB_OUTPUT
+        fork=${{github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name}}
+        echo "IS_FROM_FORK=${fork}" >> $GITHUB_ENV
         if [ ${{ github.event_name == 'pull_request' }} ]; then
-            echo "should_skip=${IS_FROM_FORK}" >> $GITHUB_OUTPUT
+            skip=${fork}
         fi 
         if [ ${{ github.event_name == 'pull_request_target' }} ]; then
-             echo "should_skip=!${IS_FROM_FORK}" >> $GITHUB_OUTPUT
+            skip=!${fork}
         fi 
-        echo "is fork ${IS_FROM_FORK}"
-         echo "should_skip ${should_skip}"
+        echo "should_skip=${skip}" >> $GITHUB_OUTPUT
+        echo "is fork ${{env.IS_FROM_FORK}}"
+        echo "is fork ${fork}"
+        echo "should_skip ${skip}"
   job1:
     name: checkout to ref
     runs-on: ubuntu-20.04
