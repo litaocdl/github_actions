@@ -24,7 +24,7 @@ jobs:
       name: skip_check
       id: skip_check
       run: |
-        echo "xxx ${{ github.event_name == 'pull_request' ||  RUN_FORK_GLOBAL }}"
+        echo "xxx ${{ github.event_name == 'pull_request'}} || ${RUN_FORK_GLOBAL}"
         echo "run fork ${RUN_FORK}"
         echo "run fork global ${RUN_FORK_GLOBAL}"
         fork=${{github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name}}
