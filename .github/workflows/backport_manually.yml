@@ -7,6 +7,13 @@ on:
       - reopened
     branches:
       - main
+  pull_request:
+    types:
+      - closed
+      - opened
+      - reopened
+    branches:
+      - main
 
 jobs:
   # Label the source pull request with 'backport-requested' and all supported releases label, the goal is, by default
