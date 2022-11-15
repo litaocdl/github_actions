@@ -27,14 +27,12 @@ jobs:
       run: |
         fork=${{github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name}}
         echo "IS_FROM_FORK=${fork}" >> $GITHUB_ENV
-        if [ ${{ github.event_name == 'pull_request' }} ]; then
-            skip=${fork}
-        fi 
-        if [ ${{ github.event_name == 'pull_request_target' }} ]; then
-            skip=!${fork}
-        fi 
+        if [ ${fork} == 'true' ]; then
+          skip=${{ github.event_name == 'pull_request' }}
+        else
+          skip=${{ github.event_name == 'pull_request_target' }}
+        fi
         echo "should_skip=${skip}" >> $GITHUB_OUTPUT
-        echo "is fork ${{env.IS_FROM_FORK}}"
         echo "is fork ${fork}"
         echo "should_skip ${skip}"
   job1:
