@@ -1,0 +1,62 @@
+name: pull_request_test
+on:
+  pull_request_target:
+    types:
+      - closed
+      - opened
+      - reopened
+    branches:
+      - main
+  pull_request:
+    types:
+      - closed
+      - opened
+      - reopened
+    branches:
+      - main
+
+jobs:
+  job1:
+    name: checkout to ref
+    runs-on: ubuntu-20.04
+    steps:
+      -
+        name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      -
+        name: run
+        if: success()
+        run: |
+          echo "pull request event name: ${{ github.event_name }}"
+          echo "head full name: ${{ github.head.repo.full_name }}"
+          echo "base full name: ${{ github.base.repo.full_name }}"
+          echo "github.ref: ${{  github.ref }}"
+          echo "this is in main branch"
+          
+   job2:
+    name: checkout 
+    runs-on: ubuntu-20.04
+    steps:
+      -
+        name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      -
+        name: run
+        if: success()
+        run: |
+          echo "pull request event name: ${{ github.event_name }}"
+          echo "head full name: ${{ github.head.repo.full_name }}"
+          echo "base full name: ${{ github.base.repo.full_name }}"
+          echo "github.ref: ${{  github.ref }}"
+          echo "this is in main branch"
+          
+         
+          
+         
+          
+     
