@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "pull request event name: ${{ github.event_name }}"
           echo "head full name: ${{ github.event.pull_request.head.repo.full_name }}"
-          echo "base full name: ${{ github.event.pull_request.base.repo.full_name }}" 
+          echo "base full name: ${{ github.event.pull_request.base.repo.full_name }}"      
           echo "head full name: ${{ github.head.repo.full_name }}"
           echo "base full name: ${{ github.base.repo.full_name }}"
           echo "github.ref: ${{  github.ref }}"
@@ -59,8 +59,24 @@ jobs:
           echo "github.ref: ${{  github.ref }}"
           echo "this is in pr branch"
           
-         
-          
-         
-          
-     
+  job3:
+    name: checkout HEAD
+    runs-on: ubuntu-20.04
+    steps:
+      -
+        name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      -
+        name: run
+        if: success()
+        run: |
+          git checkout HEAD^
+          echo "pull request event name: ${{ github.event_name }}"
+          echo "head full name: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "base full name: ${{ github.event.pull_request.base.repo.full_name }}"
+          echo "head full name: ${{ github.head.repo.full_name }}"
+          echo "base full name: ${{ github.base.repo.full_name }}"
+          echo "github.ref: ${{  github.ref }}"
+          echo "this is in pr branch"
