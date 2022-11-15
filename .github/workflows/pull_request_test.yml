@@ -16,9 +16,29 @@ on:
       - main
 
 jobs:
+  duplicate_runs:
+    runs-on: ubuntu-20.04
+    name: Skip duplicate runs
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip == 'true' }}
+    steps:
+     -
+      name: skip_check
+      run: |
+        if [ ${{ github.event_name == 'pull_request' && }} ]
+        echo "IS_FROM_FORK=${{github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name}}" >> $GITHUB_OUTPUT
+        if [ ${{ github.event_name == 'pull_request' }} ]; then
+            echo "should_skip=${IS_FROM_FORK}
+        fi 
+        if [ ${{ github.event_name == 'pull_request_target' }} ]; then
+             echo "should_skip=!${IS_FROM_FORK}
+        fi 
+        echo "is fork ${IS_FROM_FORK}"
+         echo "should_skip ${should_skip}"
   job1:
     name: checkout to ref
     runs-on: ubuntu-20.04
+    needs: duplicate_runs
     steps:
       -
         name: Checkout code
@@ -41,6 +61,7 @@ jobs:
   job2:
     name: checkout 
     runs-on: ubuntu-20.04
+    needs: duplicate_runs
     steps:
       -
         name: Checkout code
@@ -62,17 +83,19 @@ jobs:
   job3:
     name: checkout HEAD
     runs-on: ubuntu-20.04
+    needs: duplicate_runs
     steps:
       -
         name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
       -
         name: run
         if: success()
         run: |
-          git checkout HEAD^
+          git checkout ${{ github.event.pull_request.head.sha }}
           echo "pull request event name: ${{ github.event_name }}"
           echo "head full name: ${{ github.event.pull_request.head.repo.full_name }}"
           echo "base full name: ${{ github.event.pull_request.base.repo.full_name }}"
