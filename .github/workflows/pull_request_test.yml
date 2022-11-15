@@ -18,15 +18,15 @@ jobs:
     env: 
       RUN_FORK: ${{github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name}}
     outputs:
-      should_skip: ${{ steps.skip_check.outputs.should_skip == 'true' }} || ${RUN_FORK_GLOBAL}
+      should_skip: |
+        steps.skip_check.outputs.should_skip == 'true'  || 
+        ( env.RUN_FORK_GLOBAL == 'true' && github.event_name == 'pull_request' ) || 
+        ( env.RUN_FORK_GLOBAL == 'false' && github.event_name == 'pull_request_target' )
     steps:
      -
       name: skip_check
       id: skip_check
       run: |
-        echo "xxx ${{ github.event_name == 'pull_request'}} || ${RUN_FORK_GLOBAL == 'true'}"
-        echo "run fork ${RUN_FORK}"
-        echo "run fork global ${RUN_FORK_GLOBAL}"
         fork=${{github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name}}
         echo "IS_FROM_FORK=${fork}" >> $GITHUB_ENV
         if [ ${fork} == 'true' ]; then
@@ -41,8 +41,6 @@ jobs:
     name: checkout to ref
     runs-on: ubuntu-20.04
     needs: duplicate_runs
-    if: | 
-      needs.duplicate_runs.outputs.should_skip != 'true' 
     steps:
       -
         name: Checkout code
