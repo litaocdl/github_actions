@@ -17,6 +17,7 @@ jobs:
     steps:
      -
       name: skip_check
+      id: skip_check
       run: |
         fork=${{github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name}}
         echo "IS_FROM_FORK=${fork}" >> $GITHUB_ENV
@@ -45,6 +46,8 @@ jobs:
         name: run
         if: success()
         run: |
+          echo "${{needs.duplicate_runs.outputs.should_skip}}"
+          echo "${{needs.duplicate_runs.outputs.should_skip != 'true'}}"
           echo "pull request event name: ${{ github.event_name }}"
           echo "head full name: ${{ github.event.pull_request.head.repo.full_name }}"
           echo "base full name: ${{ github.event.pull_request.base.repo.full_name }}"      
