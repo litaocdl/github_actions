@@ -1,17 +1,10 @@
 name: pull_request_test
 on:
+  workflow_dispatch:
   pull_request_target:
-    types:
-      - closed
-      - opened
-      - reopened
     branches:
       - main
   pull_request:
-    types:
-      - closed
-      - opened
-      - reopened
     branches:
       - main
 
