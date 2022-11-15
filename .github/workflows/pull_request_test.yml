@@ -19,8 +19,8 @@ jobs:
       RUN_FORK: ${{github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name}}
     outputs:
       should_skip: |
-        ${{ env.RUN_FORK_GLOBAL == 'true' && github.event_name == 'pull_request' }} || 
-        ${{ env.RUN_FORK_GLOBAL == 'false' && github.event_name == 'pull_request_target' }}
+        ${{ env.RUN_FORK_GLOBAL == 'true' && github.event_name == 'pull_request'  || 
+         env.RUN_FORK_GLOBAL == 'false' && github.event_name == 'pull_request_target' }}
     steps:
      -
       name: skip_check
