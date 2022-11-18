@@ -84,9 +84,19 @@ jobs:
           echo "This is call the job var without block $JOB_VAR"
           echo "This is call the job var with context ${{env.JOB_VAR}}"
           label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :)
+          if [ -z "${label}" ]
+          then
+            echo "No ${{ matrix.branch }} label found!"
+            exit 1
+          fi
           echo "LABEL=${label}" >> $GITHUB_ENV
           echo "find label ${label} in pull request ${PR}"
           commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :)
+          if [ -z "${commit}" ]
+          then
+            echo "No commit found!"
+            exit 1
+          fi
           echo "COMMIT=${commit}" >> $GITHUB_ENV
           echo "cherry-pick commit ${commit} to branch ${{ matrix.branch }}"
           author_name=$(git show -s --format='%an' "${commit}")
