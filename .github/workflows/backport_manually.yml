@@ -14,6 +14,8 @@ on:
       - reopened
     branches:
       - main
+env: 
+  GLOBAL_VAR: "values"
 
 jobs:
   # Label the source pull request with 'backport-requested' and all supported releases label, the goal is, by default
@@ -22,6 +24,8 @@ jobs:
     name: label the source pr
     if: github.event.pull_request.merged == false
     runs-on: ubuntu-20.04
+    env:
+      JOB_VAR: "values"
     steps:
       -
         name: label the pull request
@@ -69,6 +73,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
         run: |
+        
+          echo "This is call the global var ${GLOBAL_VAR}"
+          echo "This is call the global var without block $GLOBAL_VAR"
+          echo "This is call the global var with context ${env.GLOBAL_VAR}"
+          echo "This is call the job var ${JOB_VAR}"
+          echo "This is call the job var without block $JOB_VAR"
+          echo "This is call the job var with context ${env.JOB_VAR}"
           label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :)
           echo "LABEL=${label}" >> $GITHUB_ENV
           echo "find label ${label} in pull request ${PR}"
