@@ -140,7 +140,7 @@ jobs:
             ### Context
             Automatically backport failure
 
-            Pull request: ${{ github.event.pull_request.number }} and ${PR}
+            Pull request: ${{ github.event.pull_request.number }} and ${PR} and and ${{ env.PR }}
             commit: ${{ env.COMMIT }}
             Release Branch: ${{ matrix.branch }}
 
