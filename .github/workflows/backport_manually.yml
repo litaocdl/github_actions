@@ -1,19 +1,19 @@
 name: pull_request_backport
-on:
-  pull_request_target:
-    types:
-      - closed
-      - opened
-      - reopened
-    branches:
-      - main
-  pull_request:
-    types:
-      - closed
-      - opened
-      - reopened
-    branches:
-      - main
+# on:
+#   pull_request_target:
+#     types:
+#       - closed
+#       - opened
+#       - reopened
+#     branches:
+#       - main
+#   pull_request:
+#     types:
+#       - closed
+#       - opened
+#       - reopened
+#     branches:
+#       - main
 env: 
   GLOBAL_VAR: "values"
 
