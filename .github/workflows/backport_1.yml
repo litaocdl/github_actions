@@ -23,7 +23,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           number:  ${{ github.event.pull_request.number }}
           labels: |
-            backport-requested
+            backport-requested :arrow_backward:
             release-1.16
             release-1.17
             release-1.18
@@ -40,7 +40,13 @@ jobs:
   ## backport pull request in condition when pr contains 'backport-requested' label and contains target branches labels
   back-porting-pr:
     name: backport to release branches
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'backport-requested')
+    if: | 
+       github.event.pull_request.merged == true && 
+       ( 
+         contains(github.event.pull_request.labels.*.name, 'backport-requested') ||
+         contains(github.event.pull_request.labels.*.name, 'backport-requested :arrow_backward:') 
+       )
+       
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
