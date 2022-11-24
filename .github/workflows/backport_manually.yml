@@ -87,7 +87,7 @@ jobs:
           if [ -z "${label}" ]
           then
             echo "No ${{ matrix.branch }} label found!"
-            exit 1
+            exit 0
           fi
           echo "LABEL=${label}" >> $GITHUB_ENV
           echo "find label ${label} in pull request ${PR}"
@@ -95,7 +95,7 @@ jobs:
           if [ -z "${commit}" ]
           then
             echo "No commit found!"
-            exit 1
+            exit 0
           fi
           echo "COMMIT=${commit}" >> $GITHUB_ENV
           echo "cherry-pick commit ${commit} to branch ${{ matrix.branch }}"
