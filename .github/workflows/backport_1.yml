@@ -35,7 +35,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             By default, the pull request is supposed to backport to all release branches.
-            To stop backport this pr to all release branches, remove the `backport-requested :arrow_backward:` label.
+            To stop backport this pr to all release branches, remove the backport-requested :arrow_backward: label.
             To stop backport this pr to certain release branch(es), remove the specific release-xxx label.
           reactions: heart
 
