@@ -58,7 +58,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ matrix.branch }}
-          token: ${{ secrets.REPO_GHA_PAT }}
+          token: ${{ secrets.TAO_PTO }}
       -
         name: Check commits
         if: success()
