@@ -1,9 +1,5 @@
 name: matrix2
 on:
-  push:
-    branches:
-      - '**'
-  pull_request:
   workflow_dispatch:
 
 defaults:
