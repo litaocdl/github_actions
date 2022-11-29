@@ -106,7 +106,7 @@ jobs:
           git fetch
           git cherry-pick -x --allow-empty-message --mainline 1 ${{ env.COMMIT }}
           git push
-          echo "success=true" >> $GITHUB_OUTPUT
+         
 
   create-tickets:
     name: create tickets for failed cherry-pick
@@ -121,11 +121,8 @@ jobs:
     -
       name: prepare ticket content
       run:
-        echo "${{ needs.back-porting-pr }}"
-        echo "${{ needs.back-porting-pr.result }}"
-        echo "${{ needs.back-porting-pr.outputs.release_1 }}"
-        echo "${{ needs.back-porting-pr.outputs.release_2 }}"
-        echo "${{ needs.back-porting-pr.outputs.release_3 }}"
+          label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep "release-" || :)
+          echo "labels=${label}" >> $GITHUB_ENV
     -
       name: create ticket
       uses: dacbd/create-issue-action@v1
@@ -137,9 +134,10 @@ jobs:
           ### Context
           Automatically backport failure
 
-          Pull request: ${{ env.PR }}
-          commit in main branch: [${{ env.COMMIT }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ env.COMMIT }})
+          Pull request: ${{ github.server_url }}/${{ github.repository }}/pull/${{ env.PR }}
+          Commit: ${{ github.server_url }}/${{ github.repository }}/commit/${{ env.COMMIT }}
           Cherry-pick workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          Target branch: ${{ env.labels }}
 
 
 
