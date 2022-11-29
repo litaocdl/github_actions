@@ -117,6 +117,7 @@ jobs:
     needs:
       - back-porting-pr
     if: | 
+      always() &&
       needs.back-porting-pr.output.release_1 != 'success' ||
       needs.back-porting-pr.output.release_2 != 'success' || 
       needs.back-porting-pr.output.release_3 != 'success'
