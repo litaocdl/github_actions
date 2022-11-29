@@ -58,9 +58,9 @@ jobs:
           -  release-1.17
           -  release-1.18
     outputs:
-       release_1: ${{ matrix.branch == 'release-1.16' && steps.cherry_pick.output.success || matrix.branch }}
-       release_2: ${{ matrix.branch == 'release-1.17' && steps.cherry_pick.output.success || matrix.branch }}
-       release_3: ${{ matrix.branch == 'release-1.18' && steps.cherry_pick.output.success || matrix.branch }}
+       release_1: ${{ matrix.branch == 'release-1.16' && ( steps.cherry_pick.output.success || matrix.branch ) }}
+       release_2: ${{ matrix.branch == 'release-1.17' && ( steps.cherry_pick.output.success || matrix.branch ) }}
+       release_3: ${{ matrix.branch == 'release-1.18' && ( steps.cherry_pick.output.success || matrix.branch ) }}
     env:
       PR: ${{ github.event.pull_request.number }}
     steps:
