@@ -13,7 +13,8 @@ jobs:
   # we backport everything
   label-source-pr:
     name: label the source pr
-    if: github.event.pull_request.merged == false
+    if: github.event.pull_request.merged == false &&
+        !startsWith(github.event.pull_request.title, 'feat:')
     runs-on: ubuntu-20.04
     steps:
       -
