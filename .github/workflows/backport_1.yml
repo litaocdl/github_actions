@@ -35,7 +35,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            By default, the pull request is supposed to backport to all release branches.
+            :exclamation: By default, the pull request is supposed to backport to all release branches.
 
             - To stop backporting this pr, remove the label:  backport-requested :arrow_backward:
             - To stop backporting this pr to certain release branch, remove the specific label: release-x.y
