@@ -130,7 +130,8 @@ jobs:
       run: |
           echo '${{ toJSON(needs) }}'
           label=$(gh pr view ${{ env.PR }} --json labels -q ".labels.[].name" 2>/dev/null | grep "release-" || :)
-          echo "labels=${label}" >> $GITHUB_ENV
+          echo $label
+          echo "release_label=${label}" >> $GITHUB_ENV
     -
       name: create ticket
       uses: dacbd/create-issue-action@v1
@@ -145,7 +146,7 @@ jobs:
           Pull request: ${{ github.server_url }}/${{ github.repository }}/pull/${{ env.PR }}
           Commit: ${{ github.server_url }}/${{ github.repository }}/commit/${{ env.COMMIT }}
           Cherry-pick workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          Target branch: ${{ env.labels }}
+          Target branch: ${{ env.release_label }}
 
 
 
