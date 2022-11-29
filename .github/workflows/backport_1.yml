@@ -128,11 +128,11 @@ jobs:
     -
       name: prepare ticket content
       run: |
-        echo '${{ toJSON(needs) }}'
         label=$(gh pr view ${{ env.PR }} --json labels -q ".labels.[].name" 2>/dev/null | grep "release-" || :)
-        echo $label
+        echo "label is ${label}"
         echo "release_label=${label}" >> $GITHUB_ENV
         echo '${{ github.event.pull_request.labels.*.name }}'
+        echo '${{ toJSON(needs) }}'
     -
       name: create ticket
       uses: dacbd/create-issue-action@v1
