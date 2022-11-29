@@ -68,6 +68,7 @@ jobs:
     steps:
       -
         name: Checkout code
+        if: contains( github.event.pull_request.labels.*.name, matrix.branch )
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
