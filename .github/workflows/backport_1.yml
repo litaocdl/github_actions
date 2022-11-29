@@ -91,7 +91,6 @@ jobs:
             echo "No commit found!"
             exit 0
           fi
-          echo "COMMIT=${commit}" >> $GITHUB_ENV
           echo "commit=${commit}" >> $GITHUB_OUTPUT
           echo "cherry-pick commit ${commit} to branch ${{ matrix.branch }}"
           author_name=$(git show -s --format='%an' "${commit}")
@@ -101,6 +100,8 @@ jobs:
       -
         name: cherry pick
         id: cherry_pick
+        env:
+          COMMIT: ${{ steps.check_commits.outputs.commit }}
         if: |
           env.LABEL != '' &&
           env.COMMIT != '' &&
@@ -121,13 +122,14 @@ jobs:
       failure()
     env:
       PR: ${{ github.event.pull_request.number }}
+      COMMIT: ${{ needs.back-porting-pr.outputs.commit }}
     runs-on: ubuntu-20.04
     steps:
     -
       name: prepare ticket content
       run: |
           echo '${{ toJSON(needs) }}'
-          label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep "release-" || :)
+          label=$(gh pr view ${{ env.PR }} --json labels -q ".labels.[].name" 2>/dev/null | grep "release-" || :)
           echo "labels=${label}" >> $GITHUB_ENV
     -
       name: create ticket
