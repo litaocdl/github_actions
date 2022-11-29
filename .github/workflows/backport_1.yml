@@ -120,7 +120,8 @@ jobs:
     steps:
     -
       name: prepare ticket content
-      run:
+      run: |
+          echo '${{ toJSON(needs) }}'
           label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep "release-" || :)
           echo "labels=${label}" >> $GITHUB_ENV
     -
