@@ -57,10 +57,6 @@ jobs:
           -  release-1.16
           -  release-1.17
           -  release-1.18
-    outputs:
-       release_1: ${{ matrix.branch == 'release-1.16' && ( steps.cherry_pick.output.success || matrix.branch ) }}
-       release_2: ${{ matrix.branch == 'release-1.17' && ( steps.cherry_pick.output.success || matrix.branch ) }}
-       release_3: ${{ matrix.branch == 'release-1.18' && ( steps.cherry_pick.output.success || matrix.branch ) }}
     env:
       PR: ${{ github.event.pull_request.number }}
     steps:
@@ -117,15 +113,15 @@ jobs:
     needs:
       - back-porting-pr
     if: | 
-      always() &&
-      needs.back-porting-pr.outputs.release_1 != 'success' ||
-      needs.back-porting-pr.outputs.release_2 != 'success' || 
-      needs.back-porting-pr.outputs.release_3 != 'success'
+      failure()
+    env:
+      PR: ${{ github.event.pull_request.number }}
     runs-on: ubuntu-20.04
     steps:
     -
       name: prepare ticket content
       run:
+        echo "${{ needs.back-porting-pr }}"
         echo "${{ needs.back-porting-pr.result }}"
         echo "${{ needs.back-porting-pr.outputs.release_1 }}"
         echo "${{ needs.back-porting-pr.outputs.release_2 }}"
@@ -142,6 +138,8 @@ jobs:
           Automatically backport failure
 
           Pull request: ${{ env.PR }}
-          commit: ${{ env.COMMIT }}
-          Release Branch: ${{ matrix.branch }}
+          commit in main branch: [${{ env.COMMIT }}](${{ github.server_url }}/${{ github.repository }}/commit/${{ env.COMMIT }})
+          Cherry-pick workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+
 
