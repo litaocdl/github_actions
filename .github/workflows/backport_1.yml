@@ -57,6 +57,10 @@ jobs:
           -  release-1.16
           -  release-1.17
           -  release-1.18
+    outputs:
+       release_1: ${{ matrix.branch == 'release-1.16' && steps.cherry_pick.output.success || matrix.branch }}
+       release_2: ${{ matrix.branch == 'release-1.17' && steps.cherry_pick.output.success || matrix.branch }}
+       release_3: ${{ matrix.branch == 'release-1.18' && steps.cherry_pick.output.success || matrix.branch }}
     env:
       PR: ${{ github.event.pull_request.number }}
     steps:
@@ -95,6 +99,7 @@ jobs:
           echo "AUTHOR_EMAIL=${author_email}" >> $GITHUB_ENV
       -
         name: cherry pick
+        id: cherry_pick
         if: |
           env.LABEL != '' &&
           env.COMMIT != '' &&
@@ -105,19 +110,36 @@ jobs:
           git fetch
           git cherry-pick -x --allow-empty-message --mainline 1 ${{ env.COMMIT }}
           git push
-      -
-        name: create ticket
-        uses: dacbd/create-issue-action@v1
-        if: failure()
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: Backport failure for pull request ${{ env.PR }}
-          labels: backport failure
-          body: |
-            ### Context
-            Automatically backport failure
+          echo "success=true" >> $GITHUB_OUTPUT
 
-            Pull request: ${{ env.PR }}
-            commit: ${{ env.COMMIT }}
-            Release Branch: ${{ matrix.branch }}
+  create-tickets:
+    name: create tickets for failed cherry-pick
+    needs:
+      - back-porting-pr
+    if: | 
+      needs.back-porting-pr.output.release_1 != 'success' ||
+      needs.back-porting-pr.output.release_2 != 'success' || 
+      needs.back-porting-pr.output.release_3 != 'success'
+    runs-on: ubuntu-20.04
+    steps:
+    -
+      name: prepare ticket content
+      run:
+        echo "${{ needs.back-porting-pr.output.release_1 }}"
+        echo "${{ needs.back-porting-pr.output.release_2 }}"
+        echo "${{ needs.back-porting-pr.output.release_3 }}"
+    -
+      name: create ticket
+      uses: dacbd/create-issue-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        title: Backport failure for pull request ${{ env.PR }}
+        labels: backport failure
+        body: |
+          ### Context
+          Automatically backport failure
+
+          Pull request: ${{ env.PR }}
+          commit: ${{ env.COMMIT }}
+          Release Branch: ${{ matrix.branch }}
 
