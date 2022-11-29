@@ -69,6 +69,7 @@ jobs:
       -
         name: Checkout code
         uses: actions/checkout@v3
+        if: contains( github.event.pull_request.labels.*.name, matrix.branch )
         with:
           fetch-depth: 0
           ref: ${{ matrix.branch }}
@@ -80,14 +81,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          label=$(gh pr view ${PR} --json labels -q ".labels.[].name" 2>/dev/null | grep ${{ matrix.branch }} || :)
-          if [ -z "${label}" ]
-          then
-            echo "No ${{ matrix.branch }} label found!"
-            exit 0
-          fi
-          echo "LABEL=${label}" >> $GITHUB_ENV
-          echo "find label ${label} in pull request ${PR}"
           commit=$(gh pr view ${PR} --json mergeCommit -q ".mergeCommit.oid" 2>/dev/null || :)
           if [ -z "${commit}" ]
           then
@@ -105,9 +98,7 @@ jobs:
         env:
           COMMIT: ${{ steps.check_labels_comments.outputs.commit }}
         if: |
-          env.LABEL != '' &&
-          env.COMMIT != '' &&
-          env.LABEL == matrix.branch
+          env.COMMIT != '' 
         run: |
           git config user.email "${{ env.AUTHOR_EMAIL }}"
           git config user.name "${{ env.AUTHOR_NAME }}"
