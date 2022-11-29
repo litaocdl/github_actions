@@ -59,6 +59,9 @@ jobs:
           -  release-1.18
     env:
       PR: ${{ github.event.pull_request.number }}
+    outputs:
+      commit: ${{ steps.check_commits.outputs.commit }}
+      branch: ${{ matrix.branch }}
     steps:
       -
         name: Checkout code
@@ -69,6 +72,7 @@ jobs:
           token: ${{ secrets.TAO_PTO }}
       -
         name: Check commits
+        id: check_commits
         if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -88,6 +92,7 @@ jobs:
             exit 0
           fi
           echo "COMMIT=${commit}" >> $GITHUB_ENV
+          echo "commit=${commit}" >> $GITHUB_OUTPUT
           echo "cherry-pick commit ${commit} to branch ${{ matrix.branch }}"
           author_name=$(git show -s --format='%an' "${commit}")
           echo "AUTHOR_NAME=${author_name}" >> $GITHUB_ENV
