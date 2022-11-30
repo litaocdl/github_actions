@@ -126,7 +126,7 @@ jobs:
           git push origin cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}:cherry-pick-${{ matrix.branch }}-${PR}-${{ env.COMMIT }}
       -
         name: create pull request
-        uses: devops-infra/action-pull-request@v0.5.2
+        uses: devops-infra/action-pull-request@v0.5.3
         if: |
           success() &&
           env.COMMIT != ''
