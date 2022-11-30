@@ -77,7 +77,7 @@ jobs:
       -
         name: Check labels and commits
         id: check_labels_comments
-        if: success()
+        if: contains( github.event.pull_request.labels.*.name, matrix.branch )
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -98,7 +98,7 @@ jobs:
         env:
           COMMIT: ${{ steps.check_labels_comments.outputs.commit }}
         if: |
-          env.COMMIT != '' 
+           contains( github.event.pull_request.labels.*.name, matrix.branch ) && env.COMMIT != '' 
         run: |
           git config user.email "${{ env.AUTHOR_EMAIL }}"
           git config user.name "${{ env.AUTHOR_NAME }}"
