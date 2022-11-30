@@ -17,7 +17,7 @@ jobs:
         run: | 
            echo "pr number ${{ steps.find-pull-request.outputs.number }}"
       - name: Approve pr
-        uses: hmarr/auto-approve-action@v2
+        uses: hmarr/auto-approve-action@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pull-request-number: ${{ steps.find-pull-request.outputs.number }}
