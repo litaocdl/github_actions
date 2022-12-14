@@ -360,7 +360,7 @@ jobs:
           echo PWD=$(pwd) >> $GITHUB_ENV
       -
         name: Run GoReleaser to build kubectl-cnp plugin
-        uses: goreleaser/goreleaser-action@v3
+        uses: goreleaser/goreleaser-action@v4
         if: |
           github.event_name == 'schedule' || github.event.inputs.build_plugin == 'true'
         with:
@@ -384,7 +384,7 @@ jobs:
           SLACK_MESSAGE: Build plugin `kubectl-cnp` failed!
       -
         name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v3
+        uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
           version: latest
