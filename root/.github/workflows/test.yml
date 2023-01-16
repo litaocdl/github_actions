@@ -430,7 +430,7 @@ jobs:
           password: ${{ secrets.CS_USER_APIKEY }}
       -
         name: Build and push
-        uses: docker/build-push-action@v3.1.1
+        uses: docker/build-push-action@v3.3.0
         with:
           platforms: ${{ steps.docker-platforms.outputs.platforms }}
           context: .
